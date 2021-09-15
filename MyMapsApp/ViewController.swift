@@ -12,6 +12,8 @@ import CoreLocation
 class ViewController: UIViewController {
     //MARK: - PROPERTIES
     
+    var annotationsArray = [MKPointAnnotation]()
+    
     @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var routeButton: UIButton!
     @IBOutlet weak var resetButton: UIButton!
@@ -26,7 +28,7 @@ class ViewController: UIViewController {
         self.resetButton.layer.cornerRadius = 10
             resetButton.isHidden = true
     }
-
+    
     //MARK: - BUTTON ACTION
     @IBAction func addButton(_ sender: UIButton) {
         alertAddAdress(title: "Добавить", placeholder: "Введите адрес") { text in
@@ -40,6 +42,29 @@ class ViewController: UIViewController {
     
     @IBAction func resetButtonAction(_ sender: Any) {
         print("Сбросить")
+    }
+    
+    //MARK: - FUNCTION
+    private func setupPlacemark(adress: String){ //Метод настройки метки места
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(adress) { placemark, error in
+            
+            if let error = error{ //Обработка ошибки, если приходит error
+                print(error)
+                self.alertError(title: "Ошибка", message: "Сервер недоступен. Добавьте адрес еще раз")
+                return
+            }
+            
+            guard let placemarks = placemark else {return}
+            let placemarkArr = placemarks.first //Тк будет приходить массив с адреами (Например улиша пушкина может быть не в одном городе), то берем первый элемент массива, как наилуше подходящий
+            
+            let annotation = MKPointAnnotation()
+            annotation.title = "\(adress)"
+            guard let placemarkLocation = placemarkArr?.location else {return}
+            annotation.coordinate = placemarkLocation.coordinate
+            
+            self.annotationsArray.append(annotation)
+        }
     }
 }
 
