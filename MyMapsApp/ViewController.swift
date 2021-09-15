@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var routeButton: UIButton!
     @IBOutlet weak var resetButton: UIButton!
+    @IBOutlet weak var mapView: MKMapView!
     
     //MARK: - VIEW DID LOAD
     override func viewDidLoad() {
@@ -32,7 +33,7 @@ class ViewController: UIViewController {
     //MARK: - BUTTON ACTION
     @IBAction func addButton(_ sender: UIButton) {
         alertAddAdress(title: "Добавить", placeholder: "Введите адрес") { text in
-            print(text)
+            self.setupPlacemark(adress: text)
         }
     }
     
@@ -56,7 +57,7 @@ class ViewController: UIViewController {
             }
             
             guard let placemarks = placemark else {return}
-            let placemarkArr = placemarks.first //Тк будет приходить массив с адреами (Например улиша пушкина может быть не в одном городе), то берем первый элемент массива, как наилуше подходящий
+            let placemarkArr = placemarks.first //Тк будет приходить массив с адреами (Например улица пушкина может быть не в одном городе), то берем первый элемент массива, как наилуше подходящий
             
             let annotation = MKPointAnnotation()
             annotation.title = "\(adress)"
@@ -64,6 +65,15 @@ class ViewController: UIViewController {
             annotation.coordinate = placemarkLocation.coordinate
             
             self.annotationsArray.append(annotation)
+            
+            if self.annotationsArray.count > 1{
+                UIView.animate(withDuration: 0.5){
+                    self.routeButton.isHidden = false
+                    self.resetButton.isHidden = false
+                }
+            }
+            
+            self.mapView.showAnnotations(self.annotationsArray, animated: true)
         }
     }
 }

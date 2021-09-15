@@ -76,6 +76,7 @@
                     </view>
                     <connections>
                         <outlet property="addButton" destination="FFY-4D-gea" id="yUB-XC-P05"/>
+                        <outlet property="mapView" destination="f24-ZW-1Aw" id="HSU-jB-Nvk"/>
                         <outlet property="resetButton" destination="Thu-hQ-4MP" id="wHh-4r-hnf"/>
                         <outlet property="routeButton" destination="0m6-Gb-bRC" id="mVW-6z-jcr"/>
                     </connections>
